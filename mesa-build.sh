@@ -248,6 +248,9 @@ EOF
 		# setup passwordless sudo
 		schroot -c $2 -- sh -c "sudo sed -i 's/\%sudo\sALL=(ALL:ALL) ALL/%sudo   ALL=(ALL:ALL) NOPASSWD:ALL/' /etc/sudoers"
 
+		# make sure host chrony doesn't interfere with dpkg in the chroot; ref: https://bugs-devel.debian.org/cgi-bin/bugreport.cgi?bug=1101001
+		schroot -c $2 -- sh -c "sudo sed -i '/_chrony/d' /var/lib/dpkg/statoverride"
+
 		sudo schroot -c $2 apt update
 		# "-- sh -c" required to pass arguments to chroot correctly
 		# ref: https://stackoverflow.com/a/3074544
