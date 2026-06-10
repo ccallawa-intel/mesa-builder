@@ -379,10 +379,13 @@ build_mesa "amd64" "${SUITE}64" "linux" "$BUILD_OPTS"
 
 if [ "$BUILD_PERFETTO" = "y" ]; then
 	# ref: https://docs.mesa3d.org/perfetto.html
-	cd $SRC_DIR/subprojects/perfetto
-	./tools/install-build-deps
-	./tools/gn gen --args='is_debug=false' out/linux
-	./tools/ninja -C out/linux
+	PERFETTO_DIR="$SRC_DIR/subprojects/perfetto"
+	if [ -d "$PERFETTO_DIR" ]; then
+		cd "$PERFETTO_DIR"
+		./tools/install-build-deps
+		./tools/gn gen --args='is_debug=false' out/linux
+		./tools/ninja -C out/linux
+	fi
 fi
 
 if [ "$DEPLOY" = "y" ]; then
